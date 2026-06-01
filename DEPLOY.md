@@ -35,14 +35,17 @@ pip3 install -r requirements.txt
 nano /opt/seedia_grants/.env
 ```
 
-Wklej:
+Wklej i uzupełnij swoimi kluczami:
 ```
-GEMINI_API_KEY=AIzaSyANZdb39mYiysuK7_n606CTkT4OpImYlsA
-SUPABASE_URL=https://tsjeahdzlqplrkgqqlse.supabase.co
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzamVhaGR6bHFwbHJrZ3FxbHNlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk3MjIwNiwiZXhwIjoyMDk1NTQ4MjA2fQ.iQm636LL7NOTZSj9WwLmIn7rOLPhQBWrqHdpXE56muI
-SLACK_WEBHOOK=https://hooks.slack.com/services/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
+GEMINI_API_KEY=<twój_klucz_gemini>
+SUPABASE_URL=<twój_supabase_url>
+SUPABASE_SERVICE_KEY=<twój_supabase_service_key>
+SLACK_WEBHOOK=<twój_nowy_slack_webhook_url>
 OPENAI_API_KEY=unused
 ```
+
+> ⚠️ Nigdy nie wklejaj prawdziwych kluczy do plików wersjonowanych w Git.
+> Klucze znajdziesz w: Supabase → Settings → API, Google AI Studio, Slack → api.slack.com/apps
 
 Zabezpiecz plik:
 ```bash
