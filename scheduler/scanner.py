@@ -31,20 +31,31 @@ from eui_crawler import EUICrawler
 from parp_smart_crawler import PARPSmartCrawler
 from cef_digital_crawler import CEFDigitalCrawler
 from fundusze_ue_crawler import FunduszeUECrawler
+# JST-focused crawlers
+from feniks_crawler import FENiKSCrawler
+from fundusze_norweskie_crawler import FunduszeNorweskieCrawler
+from horyzont_misja_miast_crawler import HoryzonMisjaMiastCrawler
+from atlasdotacji_crawler import AtlasDotacjiCrawler
 
 CRAWLERS = [
-    PARPCrawler(),
+    # R&D
     NCBRCrawler(),
     EITCrawler(),
+    EICAcceleratorCrawler(),
+    PARPCrawler(),
+    PARPSmartCrawler(),
+    # EU Direct
     EUPortalCrawler(),
     LIFECrawler(),
     InterregCrawler(),
-    # Nowe crawlery
-    EICAcceleratorCrawler(),
-    EUICrawler(),
-    PARPSmartCrawler(),
     CEFDigitalCrawler(),
     FunduszeUECrawler(),
+    # JST — priorytet
+    EUICrawler(),
+    FENiKSCrawler(),
+    FunduszeNorweskieCrawler(),
+    HoryzonMisjaMiastCrawler(),
+    AtlasDotacjiCrawler(),
 ]
 
 def run_daily_scan():
