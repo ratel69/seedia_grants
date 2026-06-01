@@ -18,6 +18,12 @@ ACTION_EMOJI = {
     "reject":       "❌"
 }
 
+TRACK_BADGE = {
+    "JST":       "🏛️ JST",
+    "R&D":       "🔬 R&D",
+    "EU_DIRECT": "🇪🇺 EU Direct",
+}
+
 def _score_bar(score: int) -> str:
     filled = round(score / 10)
     return "█" * filled + "░" * (10 - filled)
@@ -59,6 +65,9 @@ def send_new_grant_alert(grant: dict) -> bool:
     rate = grant.get("funding_rate")
     funding_str = f"{rate}% dofinansowania" if rate else "—"
 
+    track = grant.get("track") or ""
+    track_badge = TRACK_BADGE.get(track, f"_{track}_" if track else "")
+
     blocks = [
         {
             "type": "header",
@@ -68,7 +77,7 @@ def send_new_grant_alert(grant: dict) -> bool:
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"*<{grant.get('url','#')}|{grant.get('grant_name','Bez nazwy')}>*\n_{grant.get('programme','')} · {grant.get('source_name','')}_"
+                "text": f"*<{grant.get('url','#')}|{grant.get('grant_name','Bez nazwy')}>*\n_{grant.get('programme','')} · {grant.get('source_name','')}_{f'   {track_badge}' if track_badge else ''}"
             }
         },
         {
@@ -180,7 +189,10 @@ def send_weekly_brief(grants_apply: list, grants_watch: list, deadlines: list) -
     def fmt(g):
         score = g.get("score_total", "?")
         dl = g.get("deadline") or "?"
-        return f"• <{g.get('url','#')}|{g.get('grant_name','?')[:50]}> — *{score}/100* — deadline: {dl}"
+        track = g.get("track") or ""
+        badge = TRACK_BADGE.get(track, "")
+        badge_str = f" {badge}" if badge else ""
+        return f"• <{g.get('url','#')}|{g.get('grant_name','?')[:50]}>{badge_str} — *{score}/100* — deadline: {dl}"
 
     apply_list  = "\n".join(fmt(g) for g in grants_apply[:5])  or "_brak_"
     watch_list  = "\n".join(fmt(g) for g in grants_watch[:5])  or "_brak_"
