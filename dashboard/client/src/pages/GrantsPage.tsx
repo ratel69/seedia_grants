@@ -6,12 +6,20 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ScoreBadge, ActionBadge, StatusBadge } from "@/components/ScoreBadge";
-import { ExternalLink, Search, RefreshCw, Database } from "lucide-react";
+import { ScoreBadge, ActionBadge, StatusBadge, TrackBadge } from "@/components/ScoreBadge";
+import { ExternalLink, Search, Database } from "lucide-react";
 import type { Grant } from "@shared/schema";
 
 const ACTIONS = ["all", "apply", "strong watch", "watch", "reject"];
 const STATUSES = ["all", "new", "reviewed", "in preparation", "submitted", "won", "rejected"];
+const TRACKS = ["all", "JST", "R&D", "EU_DIRECT"];
+
+const TRACK_LABELS: Record<string, string> = {
+  all:       "Wszystkie ścieżki",
+  JST:       "🏛️ JST",
+  "R&D":     "🔬 R&D",
+  EU_DIRECT: "🇪🇺 EU Direct",
+};
 
 function DeadlineDays({ deadline }: { deadline?: string | null }) {
   if (!deadline) return <span className="text-muted-foreground text-xs">—</span>;
@@ -28,17 +36,19 @@ function DeadlineDays({ deadline }: { deadline?: string | null }) {
 }
 
 export default function GrantsPage() {
-  const [search, setSearch] = useState("");
-  const [action, setAction] = useState("all");
-  const [status, setStatus] = useState("all");
+  const [search, setSearch]   = useState("");
+  const [action, setAction]   = useState("all");
+  const [status, setStatus]   = useState("all");
+  const [track, setTrack]     = useState("all");
 
   const params = new URLSearchParams();
   if (search) params.set("search", search);
   if (action !== "all") params.set("action", action);
   if (status !== "all") params.set("status", status);
+  if (track  !== "all") params.set("track", track);
 
   const { data: grants = [], isLoading } = useQuery<Grant[]>({
-    queryKey: ["/api/grants", search, action, status],
+    queryKey: ["/api/grants", search, action, status, track],
     queryFn: () => apiRequest("GET", `/api/grants?${params}`).then(r => r.json()),
   });
 
@@ -47,18 +57,23 @@ export default function GrantsPage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ["/api/grants"] }),
   });
 
-  const applyCount = grants.filter(g => g.recommendedAction === "apply").length;
-  const strongWatchCount = grants.filter(g => g.recommendedAction === "strong watch").length;
-  const watchCount = grants.filter(g => g.recommendedAction === "watch").length;
+  const applyCount      = grants.filter(g => g.recommendedAction === "apply").length;
+  const strongWatchCount= grants.filter(g => g.recommendedAction === "strong watch").length;
+  const jstCount        = grants.filter(g => (g as any).track === "JST").length;
+  const rdCount         = grants.filter(g => (g as any).track === "R&D").length;
 
   return (
     <div className="p-6">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5">
         <div>
           <h1 className="text-xl font-bold">Radar Grantów</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            {grants.length} grantów · {applyCount} apply · {strongWatchCount} strong watch · {watchCount} watch
+            {grants.length} grantów · {applyCount} apply · {strongWatchCount} strong watch
+            {" · "}
+            <span className="text-violet-400 font-medium">🏛️ {jstCount} JST</span>
+            {" · "}
+            <span className="text-cyan-400 font-medium">🔬 {rdCount} R&D</span>
           </p>
         </div>
         <Button
@@ -66,12 +81,31 @@ export default function GrantsPage() {
           size="sm"
           onClick={() => seedMutation.mutate()}
           disabled={seedMutation.isPending}
-          data-testid="button-seed"
           className="gap-2"
         >
           <Database className="w-3.5 h-3.5" />
           {seedMutation.isPending ? "Ładowanie..." : "Załaduj demo"}
         </Button>
+      </div>
+
+      {/* Track quick-filter pills */}
+      <div className="flex gap-2 mb-4">
+        {TRACKS.map(t => (
+          <button
+            key={t}
+            onClick={() => setTrack(t)}
+            className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+              track === t
+                ? t === "JST"       ? "bg-violet-500/25 text-violet-300 border-violet-500/50"
+                : t === "R&D"       ? "bg-cyan-500/25 text-cyan-300 border-cyan-500/50"
+                : t === "EU_DIRECT" ? "bg-blue-500/25 text-blue-300 border-blue-500/50"
+                :                     "bg-muted text-foreground border-border"
+                : "bg-transparent text-muted-foreground border-border hover:border-muted-foreground"
+            }`}
+          >
+            {TRACK_LABELS[t] ?? t}
+          </button>
+        ))}
       </div>
 
       {/* Filters */}
@@ -83,11 +117,10 @@ export default function GrantsPage() {
             className="pl-9 h-9 text-sm"
             value={search}
             onChange={e => setSearch(e.target.value)}
-            data-testid="input-search"
           />
         </div>
         <Select value={action} onValueChange={setAction}>
-          <SelectTrigger className="w-40 h-9 text-sm" data-testid="select-action">
+          <SelectTrigger className="w-40 h-9 text-sm">
             <SelectValue placeholder="Rekomendacja" />
           </SelectTrigger>
           <SelectContent>
@@ -97,7 +130,7 @@ export default function GrantsPage() {
           </SelectContent>
         </Select>
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-40 h-9 text-sm" data-testid="select-status">
+          <SelectTrigger className="w-40 h-9 text-sm">
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
@@ -115,6 +148,7 @@ export default function GrantsPage() {
             <tr>
               <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Grant</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">Program</th>
+              <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-24">Track</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-28">Deadline</th>
               <th className="text-center px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-16">Score</th>
               <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-32">Rekomendacja</th>
@@ -128,6 +162,7 @@ export default function GrantsPage() {
                 <tr key={i}>
                   <td className="px-4 py-3"><Skeleton className="h-4 w-64" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-4 w-16" /></td>
+                  <td className="px-4 py-3"><Skeleton className="h-5 w-20" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-4 w-20" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-6 w-11 mx-auto" /></td>
                   <td className="px-4 py-3"><Skeleton className="h-5 w-20" /></td>
@@ -137,13 +172,13 @@ export default function GrantsPage() {
               ))
             ) : grants.length === 0 ? (
               <tr>
-                <td colSpan={7} className="px-4 py-12 text-center text-muted-foreground text-sm">
-                  Brak grantów. Kliknij "Załaduj demo" aby zasilić bazę przykładowymi danymi.
+                <td colSpan={8} className="px-4 py-12 text-center text-muted-foreground text-sm">
+                  Brak grantów spełniających kryteria.
                 </td>
               </tr>
             ) : (
               grants.map(grant => (
-                <tr key={grant.id} className="hover:bg-muted/30 transition-colors" data-testid={`row-grant-${grant.id}`}>
+                <tr key={grant.id} className="hover:bg-muted/30 transition-colors">
                   <td className="px-4 py-3">
                     <Link href={`/grants/${grant.id}`}>
                       <a className="font-medium hover:text-primary transition-colors line-clamp-2">
@@ -161,6 +196,12 @@ export default function GrantsPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className="text-xs text-muted-foreground">{grant.programme || "—"}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    {(grant as any).track
+                      ? <TrackBadge track={(grant as any).track} />
+                      : <span className="text-muted-foreground text-xs">—</span>
+                    }
                   </td>
                   <td className="px-4 py-3">
                     <DeadlineDays deadline={grant.deadline} />
@@ -183,8 +224,7 @@ export default function GrantsPage() {
                   <td className="px-4 py-3">
                     {grant.url && (
                       <a href={grant.url} target="_blank" rel="noopener noreferrer"
-                        className="text-muted-foreground hover:text-primary transition-colors"
-                        data-testid={`link-grant-${grant.id}`}>
+                        className="text-muted-foreground hover:text-primary transition-colors">
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
