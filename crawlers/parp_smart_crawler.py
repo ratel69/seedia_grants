@@ -5,11 +5,12 @@ Typ: MŚP, wdrożenie B+R, smart city, KPO/FENG
 import requests
 from base_crawler import BaseCrawler, clean_text
 
+# PARP blokuje boty na stronie głównej — używamy artykułów z ogłoszeniami naborów
 PAGES = [
-    ("https://www.parp.gov.pl/component/content/article/90571:sciezka-smart-nabor-wnioskow-ruszyl",
-     "Ścieżka SMART – nabór MŚP maj-czerwiec 2026 (700M PLN)"),
-    ("https://www.parp.gov.pl/component/content/article/90662:polskie-startupy-smart-city-z-szansa-na-miedzynarodowy-rozwoj-startuje-nowy-nabor-parp",
-     "Starts-ups Are Us – smart city (PARP, 2M PLN)"),
+    ("https://www.funduszeunijne.gov.pl/nabory/#/domyslne=1/10502=3740",
+     "Ścieżka SMART – nabór MŚP (PARP/FENG, 700M PLN)"),
+    ("https://www.gov.pl/web/fundusze-regiony/sprawdz-oferte-funduszy-europejskich-i-kpo-dostepna-w-maju2",
+     "PARP / FENG – nabory maj-czerwiec 2026"),
 ]
 
 class PARPSmartCrawler(BaseCrawler):
