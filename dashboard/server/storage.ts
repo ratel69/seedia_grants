@@ -11,6 +11,7 @@ export interface IStorage {
     recommendedAction?: string;
     search?: string;
     minScore?: number;
+    track?: string;
   }): Grant[];
   getGrantById(id: string): Grant | undefined;
   getGrantByUrl(url: string): Grant | undefined;
@@ -56,6 +57,9 @@ export const storage: IStorage = {
           like(grants.programme, term)
         )
       );
+    }
+    if (filters.track) {
+      conditions.push(eq((grants as any).track, filters.track));
     }
 
     if (conditions.length > 0) {
