@@ -1,18 +1,26 @@
 """
 Uruchamia migrację bazy Supabase przez psycopg2 (direct Postgres connection).
 Supabase udostępnia bezpośredni dostęp PostgreSQL na porcie 5432.
+
+Użycie:
+  export SUPABASE_URL=https://<ref>.supabase.co
+  export SUPABASE_SERVICE_KEY=<twój_service_role_key>
+  python3 migrations/run_migration.py
 """
 import os
 import sys
 
-SUPABASE_URL = "https://tsjeahdzlqplrkgqqlse.supabase.co"
-SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRzamVhaGR6bHFwbHJrZ3FxbHNlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTk3MjIwNiwiZXhwIjoyMDk1NTQ4MjA2fQ.iQm636LL7NOTZSj9WwLmIn7rOLPhQBWrqHdpXE56muI"
-PROJECT_REF = "tsjeahdzlqplrkgqqlse"
+SUPABASE_URL = os.environ.get("SUPABASE_URL", "")
+SERVICE_KEY = os.environ.get("SUPABASE_SERVICE_KEY", "")
+
+if not SUPABASE_URL or not SERVICE_KEY:
+    print("ERROR: Ustaw zmienne środowiskowe SUPABASE_URL i SUPABASE_SERVICE_KEY")
+    sys.exit(1)
+
+PROJECT_REF = SUPABASE_URL.replace("https://", "").split(".")[0]
 
 # Supabase direct Postgres connection string
-# Format: postgresql://postgres.[ref]:[password]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres
-# Hasło = service_role key dla połączenia przez pooler
-DB_HOST = f"aws-0-eu-central-1.pooler.supabase.com"
+DB_HOST = "aws-0-eu-central-1.pooler.supabase.com"
 DB_PORT = 5432
 DB_NAME = "postgres"
 DB_USER = f"postgres.{PROJECT_REF}"
