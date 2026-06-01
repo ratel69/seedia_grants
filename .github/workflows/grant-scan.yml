@@ -1,0 +1,48 @@
+name: SEEDiA Grant Scan
+
+on:
+  schedule:
+    # Poniedziałek 07:00 UTC = 09:00 CEST
+    - cron: '0 7 * * 1'
+    # Środa 07:00 UTC = 09:00 CEST
+    - cron: '0 7 * * 3'
+
+  # Możliwość ręcznego odpalenia z GitHub UI (przycisk "Run workflow")
+  workflow_dispatch:
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run grant scan
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          OPENAI_API_KEY: unused
+        run: python run_scan.py
+
+      - name: Send weekly brief (tylko poniedziałek)
+        if: github.event_name == 'schedule' && startsWith(github.event.schedule, '0 7 * * 1')
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          OPENAI_API_KEY: unused
+        run: python send_weekly_brief.py
