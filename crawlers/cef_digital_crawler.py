@@ -6,10 +6,10 @@ import requests
 from base_crawler import BaseCrawler, clean_text
 
 PAGES = [
-    ("https://hadea.ec.europa.eu/calls-proposals/cef-digital_en",
-     "CEF Digital – aktywne nabory 2026 (HaDEA)"),
     ("https://hadea.ec.europa.eu/news/new-cef-digital-calls-open-proposals-digital-global-gateways-2026-03-17_en",
      "CEF-DIG-2026-GATEWAYS – Global Gateway backbone (180M€)"),
+    ("https://hadea.ec.europa.eu/calls-proposals_en",
+     "HaDEA – aktywne nabory 2026"),
 ]
 
 class CEFDigitalCrawler(BaseCrawler):
