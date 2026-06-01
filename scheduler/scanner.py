@@ -26,6 +26,11 @@ from eit_crawler import EITCrawler
 from eu_portal_crawler import EUPortalCrawler
 from life_crawler import LIFECrawler
 from interreg_crawler import InterregCrawler
+from eic_accelerator_crawler import EICAcceleratorCrawler
+from eui_crawler import EUICrawler
+from parp_smart_crawler import PARPSmartCrawler
+from cef_digital_crawler import CEFDigitalCrawler
+from fundusze_ue_crawler import FunduszeUECrawler
 
 CRAWLERS = [
     PARPCrawler(),
@@ -34,6 +39,12 @@ CRAWLERS = [
     EUPortalCrawler(),
     LIFECrawler(),
     InterregCrawler(),
+    # Nowe crawlery
+    EICAcceleratorCrawler(),
+    EUICrawler(),
+    PARPSmartCrawler(),
+    CEFDigitalCrawler(),
+    FunduszeUECrawler(),
 ]
 
 def run_daily_scan():
