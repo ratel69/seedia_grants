@@ -45,6 +45,27 @@ export function ActionBadge({ action }: { action: string }) {
   );
 }
 
+export function TrackBadge({ track }: { track: string }) {
+  const styles: Record<string, string> = {
+    "JST":       "bg-violet-500/15 text-violet-400 border-violet-500/30",
+    "R&D":       "bg-cyan-500/15 text-cyan-400 border-cyan-500/30",
+    "EU_DIRECT": "bg-blue-500/15 text-blue-400 border-blue-500/30",
+  };
+  const labels: Record<string, string> = {
+    "JST":       "🏛️ JST",
+    "R&D":       "🔬 R&D",
+    "EU_DIRECT": "🇪🇺 EU Direct",
+  };
+  return (
+    <span className={cn(
+      "inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold border",
+      styles[track] ?? "bg-muted text-muted-foreground border-border"
+    )}>
+      {labels[track] ?? track}
+    </span>
+  );
+}
+
 export function StatusBadge({ status }: { status: string }) {
   const styles: Record<string, string> = {
     "new":            "bg-slate-500/15 text-slate-400 border-slate-500/30",
