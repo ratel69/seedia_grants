@@ -117,6 +117,7 @@ def run_daily_scan():
                     "risk_level": extracted.get("risk_level"),
                     "key_risks": extracted.get("key_risks"),
                     "recommended_action": extracted.get("recommended_action"),
+                    "track": extracted.get("track"),
                     "suggested_concept": extracted.get("suggested_concept"),
                     "next_action": extracted.get("next_action"),
                     "status": "new",
