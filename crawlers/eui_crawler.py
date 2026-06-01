@@ -1,55 +1,51 @@
 """
 EUI – European Urban Initiative Crawler
 Źródło: https://www.urban-initiative.eu/calls-proposals
-Typ: projekty miejskie, 60M€ ERDF, dla miast i partnerów
+Typ: projekty miejskie, 60M€ ERDF
 """
 import requests
-from bs4 import BeautifulSoup
-from base_crawler import BaseCrawler
+from base_crawler import BaseCrawler, clean_text
 
-BASE_URL = "https://www.urban-initiative.eu"
 PAGES = [
-    "/calls-proposals",
-    "/calls-proposals/fourth-call-proposals-innovative-actions",
+    ("https://www.urban-initiative.eu/calls-proposals",
+     "EUI – Calls for Proposals 2026"),
+    ("https://www.urban-initiative.eu/calls-proposals/fourth-call-proposals-innovative-actions",
+     "EUI Fourth Call – Innovative Actions (60M€ ERDF)"),
 ]
 
 class EUICrawler(BaseCrawler):
-    def __init__(self):
-        super().__init__("European Urban Initiative", "https://www.urban-initiative.eu")
+    source_name = "European Urban Initiative (EUI)"
+    source_url  = "https://www.urban-initiative.eu"
+    programme   = "European Urban Initiative / ERDF"
 
-    def fetch_grants(self):
+    def crawl(self):
         grants = []
-        headers = {"User-Agent": "Mozilla/5.0 (compatible; SEEDiA-Bot/1.0)"}
+        headers = {"User-Agent": "Mozilla/5.0 (compatible; SEEDiA-GrantBot/1.0)"}
 
-        for path in PAGES:
-            url = BASE_URL + path
+        for url, fallback_title in PAGES:
             try:
                 resp = requests.get(url, headers=headers, timeout=20)
                 if resp.status_code != 200:
+                    print(f"[EUI] HTTP {resp.status_code} for {url}")
                     continue
-                soup = BeautifulSoup(resp.text, "lxml")
 
-                title_tag = soup.find("h1") or soup.find("title")
-                title = title_tag.get_text(strip=True) if title_tag else "EUI Call for Proposals"
-
-                main = soup.find("main") or soup.find("article") or soup.body
-                content = main.get_text(" ", strip=True)[:8000] if main else ""
+                raw_content = clean_text(resp.text)[:8000]
 
                 grants.append({
+                    "grant_name": fallback_title,
                     "url": url,
-                    "title": title,
-                    "content": content,
-                    "source": "European Urban Initiative",
+                    "raw_content": raw_content,
+                    "source_name": self.source_name,
+                    "programme": self.programme,
                 })
+                print(f"[EUI] ✓ {fallback_title}")
             except Exception as e:
-                print(f"[EUI] Error fetching {url}: {e}")
+                print(f"[EUI] Error {url}: {e}")
 
         return grants
 
 
 if __name__ == "__main__":
-    crawler = EUICrawler()
-    results = crawler.fetch_grants()
-    for r in results:
-        print(f"  → {r['title']} | {r['url']}")
-    print(f"Total: {len(results)}")
+    c = EUICrawler()
+    for r in c.crawl():
+        print(f"  → {r['grant_name']} | {r['url']}")
