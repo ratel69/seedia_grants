@@ -7,10 +7,10 @@ import requests
 from base_crawler import BaseCrawler, clean_text
 
 PAGES = [
-    ("https://www.urban-initiative.eu/calls-proposals",
-     "EUI – Calls for Proposals 2026"),
     ("https://www.urban-initiative.eu/calls-proposals/fourth-call-proposals-innovative-actions",
      "EUI Fourth Call – Innovative Actions (60M€ ERDF)"),
+    ("https://www.urban-initiative.eu/news/new-innovative-action-call-proposals-launches-early-2026",
+     "EUI – New Innovative Action Call 2026"),
 ]
 
 class EUICrawler(BaseCrawler):
