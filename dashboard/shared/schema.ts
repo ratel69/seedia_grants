@@ -31,6 +31,7 @@ export const grants = sqliteTable("grants", {
   riskLevel:                text("risk_level"),
   keyRisks:                 text("key_risks"),
   recommendedAction:        text("recommended_action"),
+  track:                    text("track"),  // JST | R&D | EU_DIRECT
   suggestedConcept:         text("suggested_concept"),
   nextAction:               text("next_action"),
   status:                   text("status").default("new"),
