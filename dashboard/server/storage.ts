@@ -59,7 +59,7 @@ export const storage: IStorage = {
       );
     }
     if (filters.track) {
-      conditions.push(eq((grants as any).track, filters.track));
+      conditions.push(eq(grants.track, filters.track));
     }
 
     if (conditions.length > 0) {
