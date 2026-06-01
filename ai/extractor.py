@@ -54,6 +54,7 @@ JSON schema:
   "score_reasoning": "string, max 3 sentences in Polish",
   "risk_level": "niski / średni / wysoki",
   "key_risks": "string in Polish",
+  "track": "JST / R&D / EU_DIRECT",
   "recommended_action": "apply / strong watch / watch / reject",
   "suggested_concept": "string, 5 sentences in Polish describing a project concept for SEEDiA",
   "next_action": "string in Polish, concrete next step for the team"
@@ -72,7 +73,14 @@ Strict rules:
 - Do NOT invent missing information. Use null for unknown fields.
 - Be strict. Prefer rejecting weak grants over false positives.
 - Auto-reject if: SEEDiA clearly not eligible, basic research only, own contribution >50% with no end customer, deadline <14 days and complex application.
-- Score 80-100 = apply, 65-79 = strong watch, 45-64 = watch, <45 = reject."""
+- Score 80-100 = apply, 65-79 = strong watch, 45-64 = watch, <45 = reject.
+
+Track assignment rules (mandatory):
+- JST: grant is for municipalities/local governments (gmina, powiat, miasto, JST), OR allows SME+JST consortium where JST is lead/co-applicant. This is SEEDiA's PRIMARY priority — city pilots, smart city infra, mobility.
+- R&D: grant is for SMEs doing research, prototyping, or technology development (B+R, TRL, innovation). SEEDiA applies alone or in business consortium.
+- EU_DIRECT: direct EU programme call (LIFE, EIT, Interreg, CEF, Horizon) without JST requirement and not purely R&D-focused.
+
+When in doubt: if JST can be a partner even optionally → assign JST."""
 
 
 def extract_and_score(raw_content: str, source_name: str = "", url: str = "") -> dict:
