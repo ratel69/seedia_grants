@@ -12,12 +12,13 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
   // GET /api/grants — list with filters
   app.get("/api/grants", (req, res) => {
     try {
-      const { status, action, search, minScore } = req.query;
+      const { status, action, search, minScore, track } = req.query;
       const grants = storage.getGrants({
         status: status as string,
         recommendedAction: action as string,
         search: search as string,
         minScore: minScore ? parseInt(minScore as string) : undefined,
+        track: track as string,
       });
       res.json(grants);
     } catch (e: any) {
@@ -119,6 +120,7 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
           grantName: "EIT Urban Mobility — Strategic Innovation Open Call 2026",
           sourceName: "EIT Urban Mobility",
           programme: "EIT",
+          track: "EU_DIRECT",
           url: "https://www.eiturbanmobility.eu/join-us/call-for-proposals/strategic-innovation-2026",
           deadline: "2026-09-15",
           openingDate: "2026-05-01",
@@ -151,6 +153,7 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
           grantName: "PARP FENG 1.1 — Innowacje dla MŚP — nabór Q3 2026",
           sourceName: "PARP — harmonogram naborów",
           programme: "PARP",
+          track: "R&D",
           url: "https://www.parp.gov.pl/feng-1-1-innowacje-msP-2026",
           deadline: "2026-08-30",
           openingDate: "2026-07-01",
@@ -183,6 +186,7 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
           grantName: "Horizon Europe Cluster 5 — Smart Cities Mission Call 2026",
           sourceName: "EU Funding & Tenders Portal",
           programme: "Horizon Europe",
+          track: "JST",
           url: "https://ec.europa.eu/info/funding-tenders/opportunities/portal/screen/opportunities/calls-for-proposals/horizon-cluster5-smart-cities-2026",
           deadline: "2026-11-20",
           openingDate: "2026-06-01",
@@ -214,6 +218,7 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
           grantName: "NCBR Szybka Ścieżka — Technologie Energetyczne 2026",
           sourceName: "NCBR — harmonogram konkursów",
           programme: "NCBR",
+          track: "R&D",
           url: "https://www.gov.pl/web/ncbr/szybka-sciezka-energia-2026",
           deadline: "2026-07-15",
           fundingAmountMax: 5000000,
@@ -245,6 +250,7 @@ export function registerRoutes(httpServer: ReturnType<typeof createServer>, app:
           grantName: "LIFE Climate Action — Resilient Urban Infrastructure 2026",
           sourceName: "LIFE / CINEA",
           programme: "LIFE",
+          track: "JST",
           url: "https://cinea.ec.europa.eu/life-climate-resilient-urban-2026",
           deadline: "2026-10-05",
           fundingAmountMax: 3000000,
