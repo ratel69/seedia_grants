@@ -1,0 +1,25 @@
+[Unit]
+Description=SEEDiA Grant Intelligence Scheduler
+After=network.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=YOUR_LINUX_USER
+WorkingDirectory=/opt/seedia_grants
+
+# Ładuje zmienne z .env automatycznie
+EnvironmentFile=/opt/seedia_grants/.env
+
+ExecStart=/usr/bin/python3 /opt/seedia_grants/scheduler/cron_scheduler.py
+
+# Restart przy awarii, ale nie przy ręcznym zatrzymaniu
+Restart=on-failure
+RestartSec=30
+
+# Logi trafiają do journald (podgląd: journalctl -u seedia-scheduler -f)
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
