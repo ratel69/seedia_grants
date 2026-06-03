@@ -64,7 +64,13 @@ def save_alert(alert_data: dict):
 
 def save_fiche(fiche_data: dict):
     db = get_db()
-    db.table("grant_fiches").upsert(fiche_data, on_conflict="grant_id").execute()
+    grant_id = fiche_data.get("grant_id")
+    if grant_id:
+        existing = db.table("grant_fiches").select("id").eq("grant_id", grant_id).execute()
+        if existing.data:
+            db.table("grant_fiches").update(fiche_data).eq("grant_id", grant_id).execute()
+            return
+    db.table("grant_fiches").insert(fiche_data).execute()
 
 
 def get_upcoming_deadlines(days: int = 30) -> list:
