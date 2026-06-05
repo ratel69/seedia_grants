@@ -8,7 +8,7 @@ Challenges: https://www.diana.nato.int/challenges.html
 """
 import requests
 from bs4 import BeautifulSoup
-from .base_crawler import BaseCrawler
+from base_crawler import BaseCrawler
 
 
 class NatoDianaCrawler(BaseCrawler):
