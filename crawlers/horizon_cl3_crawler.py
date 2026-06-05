@@ -8,7 +8,7 @@ Portal: https://ec.europa.eu/info/funding-tenders/opportunities/portal/
 """
 import requests
 from bs4 import BeautifulSoup
-from .base_crawler import BaseCrawler
+from base_crawler import BaseCrawler
 
 
 class HorizonCL3Crawler(BaseCrawler):
