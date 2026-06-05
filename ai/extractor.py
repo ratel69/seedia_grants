@@ -79,8 +79,9 @@ Track assignment rules (mandatory):
 - JST: grant is for municipalities/local governments (gmina, powiat, miasto, JST), OR allows SME+JST consortium where JST is lead/co-applicant. This is SEEDiA's PRIMARY priority — city pilots, smart city infra, mobility.
 - R&D: grant is for SMEs doing research, prototyping, or technology development (B+R, TRL, innovation). SEEDiA applies alone or in business consortium.
 - EU_DIRECT: direct EU programme call (LIFE, EIT, Interreg, CEF, Horizon) without JST requirement and not purely R&D-focused.
+- DUAL_USE: grant explicitly targets civilian-military dual-use technologies (EDF, NATO DIANA, EIC dual-use track, NCBR MilTech, Horizon CL3 security, EDIP). Technology has both civilian smart-city AND defence/security application. Keyword hints in raw_content: 'dual_use', 'defence', 'military', 'NATO', 'EDF', 'DIANA', 'MilTech', 'surveillance', 'security forces'.
 
-When in doubt: if JST can be a partner even optionally → assign JST."""
+When in doubt: if JST can be a partner even optionally → assign JST. If raw_content contains 'Track hint: dual_use' → assign DUAL_USE."""
 
 
 def extract_and_score(raw_content: str, source_name: str = "", url: str = "") -> dict:
