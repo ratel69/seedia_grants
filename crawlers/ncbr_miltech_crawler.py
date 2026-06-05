@@ -7,7 +7,7 @@ URL: https://akces-ncbr.pl/miltech
 """
 import requests
 from bs4 import BeautifulSoup
-from .base_crawler import BaseCrawler
+from base_crawler import BaseCrawler
 
 
 class NcbrMiltechCrawler(BaseCrawler):
