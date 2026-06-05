@@ -22,6 +22,7 @@ TRACK_BADGE = {
     "JST":       "🏛️ JST",
     "R&D":       "🔬 R&D",
     "EU_DIRECT": "🇪🇺 EU Direct",
+    "DUAL_USE":  "⚔️ Dual Use",
 }
 
 def _score_bar(score: int) -> str:
