@@ -36,6 +36,11 @@ from feniks_crawler import FENiKSCrawler
 from fundusze_norweskie_crawler import FunduszeNorweskieCrawler
 from horyzont_misja_miast_crawler import HoryzonMisjaMiastCrawler
 from atlasdotacji_crawler import AtlasDotacjiCrawler
+# Dual Use crawlers
+from horizon_cl3_crawler import HorizonCL3Crawler
+from edf_sme_crawler import EDFSmeCrawler
+from nato_diana_crawler import NatoDianaCrawler
+from ncbr_miltech_crawler import NcbrMiltechCrawler
 
 CRAWLERS = [
     # R&D
@@ -56,6 +61,11 @@ CRAWLERS = [
     FunduszeNorweskieCrawler(),
     HoryzonMisjaMiastCrawler(),
     AtlasDotacjiCrawler(),
+    # Dual Use — obrona, bezpieczeństwo, cywilno-wojskowe
+    HorizonCL3Crawler(),
+    EDFSmeCrawler(),
+    NatoDianaCrawler(),
+    NcbrMiltechCrawler(),
 ]
 
 def run_daily_scan():
